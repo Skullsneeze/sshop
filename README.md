@@ -1,10 +1,10 @@
-# SSHop
+# 🐇 SSHop
 
-A simple CLI tool to quickly SSH into configured client environments with interactive selection.
+A simple CLI tool to quickly SSH into (or hop to) configured client environments with interactive selection.
 
 ---
 
-## Features
+## ✨ Features
 
 - Interactive selection of clients and environments via `fzf` or `dialog`
 - Supports multiple environments (e.g., Staging, Production)
@@ -18,7 +18,7 @@ A simple CLI tool to quickly SSH into configured client environments with intera
 
 There are several ways to install SSHop.
 
-### Homebrew
+### 🍎 Homebrew
 
 You can install **sshop** via Homebrew from the custom tap:
 
@@ -33,13 +33,13 @@ And then:
 brew install skullsneeze/tap/sshop
 ```
 
-### Curl
+### 📦 Curl + install.sh
 
 Coming soon.
 
 ---
 
-## Usage
+## 💡 Usage
 
 Simply run:
 
@@ -49,9 +49,16 @@ sshop
 
 This will prompt you to select a client and then an environment to SSH into.
 
+```
+Options:
+--config, -c <file>   Use a specific clients.yaml config file
+--dialog, -d          Force using dialog instead of fzf
+--help, -h            Show this help message
+```
+
 ---
 
-### Configuration
+### ⚙️ Configuration
 
 By default, `sshop` reads the configuration file from:
 
@@ -67,7 +74,7 @@ sshop --config /path/to/your/clients.yaml
 
 ---
 
-### Clients
+### 📋 Clients
 
 Clients are managed in a yaml file using the following structure:
 
@@ -99,20 +106,7 @@ clients:
 
 ---
 
-### Options
-
-```
-Usage: sshop [options]
-
-Options:
---config, -c <file>   Use a specific clients.yaml config file
---dialog, -d          Force using dialog instead of fzf
---help, -h            Show this help message
-```
-
----
-
-## Requirements
+## 🛠️ Requirements
 
 - `fzf` or `dialog` installed (for interactive selection)
 - `yq` (for processing yaml clients list)
