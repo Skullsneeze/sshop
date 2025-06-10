@@ -5,7 +5,6 @@ set -euo pipefail
 # === Defaults & Flags ===
 DEFAULT_CONFIG="${HOME}/.sshop/clients.json"
 CONFIG_FILE="${SSHOP_CONFIG:-$DEFAULT_CONFIG}"
-USE_DIALOG=false
 MODE="normal"
 BACK_OPTION="⬅ Back"
 
@@ -41,9 +40,9 @@ print_help() {
 Usage: sshop [options]
 
 Options:
-  --add, -a             Add new client via prompt
-  --edit, -e            Edit existing client via fzf + prompts
-  --delete, -d          Delete existing client via fzf + prompts
+  --add, -a             Add new client via interactive prompts
+  --edit, -e            Edit existing client via fzf + interactive prompts
+  --delete, -d          Delete existing client via fzf + interactive prompts
   --config, -c <file>   Use a specific clients.json config file
   --help, -h            Show this help message
 
@@ -148,32 +147,9 @@ pick_option() {
   local options=("$@")
   local result=""
 
-  # Add back option as entry only for fzf if requested
-  if ! $USE_DIALOG && [ "$include_back" == "true" ]; then
-    options=("$BACK_OPTION" "${options[@]}")
-  fi
+  options=("$BACK_OPTION" "${options[@]}")
 
-  if $USE_DIALOG; then
-    local menu_items=()
-    for opt in "${options[@]}"; do
-      menu_items+=("$opt" "")
-    done
-
-    temp=$(mktemp)
-    trap "rm -f $temp" EXIT
-    if ! dialog --clear --stdout --menu "$prompt" 15 60 10 "${menu_items[@]}" > "$temp"; then
-      rm -f "$temp"
-      trap - EXIT
-      echo "$BACK_OPTION"
-      return
-    fi
-
-    result=$(<"$temp")
-    rm -f "$temp"
-    trap - EXIT
-  else
-    result=$(printf "%s\n" "${options[@]}" | fzf --prompt="$prompt: " --height=20 --border) || result="$BACK_OPTION"
-  fi
+  result=$(printf "%s\n" "${options[@]}" | fzf --prompt="$prompt: " --height=20 --border) || result="$BACK_OPTION"
 
   echo "$result"
 }
@@ -205,31 +181,41 @@ get_confirm() {
 }
 
 pick_client_server() {
-  # Pick client
-  local client
-  client=$(pick_option "Select a client" false "${CLIENT_NAMES[@]}")
-  [[ "$client" == "$BACK_OPTION" || -z "$client" ]] && return 1
+  while true; do
+    # Pick client
+    local client
+    client=$(pick_option "Select a client" false "${CLIENT_NAMES[@]}")
 
-  # Get servers for the client
-  local servers=()
-  while IFS= read -r line; do
-    servers+=("$line")
-  done < <(jq -r --arg client "$client" '.clients[] | select(.name == $client) | .servers[]?.name' "$CONFIG_FILE")
+    if [[ "$client" == "$BACK_OPTION" || -z "$client" ]]; then
+      exit 0;
+    fi
 
-  if [[ "${#servers[@]}" -eq 0 ]]; then
-    echo "No servers defined for client '$client'."
-    return 2
-  fi
+    while true; do
+      # Get servers for the client
+      local servers=()
+      while IFS= read -r line; do
+        servers+=("$line")
+      done < <(jq -r --arg client "$client" '.clients[] | select(.name == $client) | .servers[]?.name' "$CONFIG_FILE")
 
-  # Pick server
-  local server
-  server=$(pick_option "Select an environment for $client" true "${servers[@]}")
-  [[ "$server" == "$BACK_OPTION" || -z "$server" ]] && return 1
+      if [[ "${#servers[@]}" -eq 0 ]]; then
+        echo "No servers defined for client '$client'."
+        return 2
+      fi
 
-  # Output selection as global vars or stdout
-  CLIENT="$client"
-  SERVER="$server"
-  return 0
+      # Pick server
+      local server
+      server=$(pick_option "Select an environment for $client" true "${servers[@]}")
+
+      if [[ "$server" == "$BACK_OPTION" || -z "$server" ]]; then
+        break
+      fi
+
+      # Output selection as global vars or stdout
+      CLIENT="$client"
+      SERVER="$server"
+      return 0
+    done
+  done
 }
 
 add_client_server() {
@@ -324,6 +310,7 @@ while true; do
     exit 0
   fi
 
+  # Connect to selected server
   read -r USERNAME HOST PORT < <(jq -r --arg client "$CLIENT" --arg server "$SERVER" \
     '.clients[] | select(.name == $client) | .servers[] | select(.name == $server) | "\(.username) \(.host) \(.port)"' "$CONFIG_FILE")
 
@@ -332,7 +319,9 @@ while true; do
     continue
   fi
 
-  echo "Connecting to $CLIENT → $SERVER ($USERNAME@$HOST:$PORT)..."
-  exec ssh -p"$PORT" "$USERNAME@$HOST" -t "bash"
+  gum spin --spinner minidot --title "Connecting to $CLIENT → $SERVER ($USERNAME@$HOST:$PORT)..." -- sleep 3;
+  exit 0;
+  # gum spin --spinner minidot --title "Connecting to $CLIENT → $SERVER ($USERNAME@$HOST:$PORT)..." -- exec ssh -p"$PORT" "$USERNAME@$HOST" -t "bash"
+
 done
 
