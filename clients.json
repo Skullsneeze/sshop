@@ -1,0 +1,51 @@
+{
+  "clients": [
+    {
+      "name": "My first client",
+      "servers": [
+        {
+          "name": "Staging",
+          "host": "my-ssh-server.com",
+          "username": "staging-ssh-user"
+        },
+        {
+          "name": "Production",
+          "host": "my-ssh-server.com",
+          "username": "production-ssh-user"
+        }
+      ]
+    },
+    {
+      "name": "Some other client",
+      "servers": [
+        {
+          "name": "Testing",
+          "host": "some-server.com",
+          "port": 2222,
+          "username": "my-user"
+        },
+        {
+          "name": "Client Acceptance",
+          "host": "some-other-server.com",
+          "port": 2222,
+          "username": "my-user"
+        },
+        {
+          "name": "Production",
+          "host": "some-server.com",
+          "username": "my-other-user"
+        }
+      ]
+    },
+    {
+      "name": "Latest client",
+      "servers": [
+        {
+          "name": "Production",
+          "host": "lone-server.com",
+          "username": "anyone"
+        }
+      ]
+    }
+  ]
+}
