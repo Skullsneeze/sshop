@@ -4,7 +4,7 @@ set -euo pipefail
 
 # === Variables ===
 SCRIPT_NAME="sshop"
-SCRIPT_SOURCE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$SCRIPT_NAME.sh"
+SCRIPT_SOURCE="https://github.com/Skullsneeze/sshop/releases/latest/download/sshop"
 DEFAULT_INSTALL_DIR="/usr/local/bin"
 FALLBACK_INSTALL_DIR="${HOME}/.local/bin"
 CONFIG_DIR="${HOME}/.sshop"
@@ -89,7 +89,7 @@ install_script() {
   fi
 
   echo -e "${GREEN}📦 Installing $SCRIPT_NAME to $target_dir${NC}"
-  cp "$SCRIPT_SOURCE" "$target_dir/$SCRIPT_NAME"
+  curl -sSfL "$SCRIPT_SOURCE" -o "$target_dir/$SCRIPT_NAME"
   chmod +x "$target_dir/$SCRIPT_NAME"
 
   # Add to PATH if necessary
