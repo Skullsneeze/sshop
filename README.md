@@ -30,7 +30,7 @@ brew tap skullsneeze/homebrew-tap https://github.com/Skullsneeze/homebrew-tools.
 And then:
 
 ```sh
-brew install skullsneeze/tap/sshop
+brew install sshop
 ```
 
 ### 📦 Curl + install.sh
