@@ -319,6 +319,8 @@ while true; do
     continue
   fi
 
+  echo "Connecting to $CLIENT → $SERVER ($USERNAME@$HOST:$PORT)..."
+
   exec ssh -p"$PORT" "$USERNAME@$HOST" -t "bash"
 
 done
