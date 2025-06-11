@@ -319,9 +319,7 @@ while true; do
     continue
   fi
 
-  gum spin --spinner minidot --title "Connecting to $CLIENT → $SERVER ($USERNAME@$HOST:$PORT)..." -- sleep 3;
-  exit 0;
-  # gum spin --spinner minidot --title "Connecting to $CLIENT → $SERVER ($USERNAME@$HOST:$PORT)..." -- exec ssh -p"$PORT" "$USERNAME@$HOST" -t "bash"
+  exec ssh -p"$PORT" "$USERNAME@$HOST" -t "bash"
 
 done
 
