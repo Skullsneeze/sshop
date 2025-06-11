@@ -2,6 +2,8 @@
 
 A simple CLI tool to quickly SSH into (or hop to) configured client environments with interactive selection.
 
+![connection example](assets/connect_example.gif "Connect to your servers with SSHop")
+
 ---
 
 ## ✨ Features
@@ -128,3 +130,20 @@ Clients are managed in a json file using the following structure:
 - `gum` (for nice looking inputs)
 
 _Note that both Homebrew and install.sh will try to install these requirement for you._
+
+
+---
+
+## 🔭 Example Usage
+
+**Add servers to SSHop interactively:**
+
+![add example](assets/add_example.gif "Add servers to SSHop interactively")
+
+**Edit servers in SSHop interactively:**
+
+![edit example](assets/edit_example.gif "Edit servers in SSHop interactively")
+
+**Remove servers from SSHop interactively:**
+
+![delete example](assets/delete_example.gif "Remove servers from SSHop interactively")
