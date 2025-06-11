@@ -6,11 +6,11 @@ A simple CLI tool to quickly SSH into (or hop to) configured client environments
 
 ## ✨ Features
 
-- Interactive selection of clients and environments via `fzf`
-- Supports multiple environments (e.g., Staging, Production)
-- Reads client/server data from a YAML config file
+- Interactive selection, adding, and updating of clients and environments via `fzf` and `gum`
+- Supports multiple environments per client (e.g., Staging, Production)
+- Reads client/server data from an easy to maintain JSON config file
 - Easily configurable and extensible
-- Homebrew installation for Mac users
+- Easy Homebrew installation for Mac users
 
 ---
 
